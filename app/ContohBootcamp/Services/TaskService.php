@@ -56,4 +56,55 @@ class TaskService {
 		$id = $this->taskRepository->save( $editTask);
 		return $id;
 	}
+
+	/**
+	 * NOTE: untuk menghapus task
+	 */
+	public function deleteTask(string $taskId)
+	{
+		$id = $this->taskRepository->delete($taskId);
+		return $id;
+	}
+
+	/**
+	 * NOTE: untuk menambahkan assigntask
+	 */
+	public function assignTask(array $editTask, array $formData)
+	{
+		if(isset($formData['assigned']))
+		{
+			$editTask['assigned'] = $formData['assigned'];
+		}
+
+		$id = $this->taskRepository->save( $editTask);
+		return $id;
+	}
+
+	/**
+	 * NOTE: untuk menghapus assigntask
+	 */
+	public function unassignTask(array $editTask)
+	{
+		$editTask['assigned'] = null;
+		$id = $this->taskRepository->save( $editTask);
+		return $id;
+	}
+
+	/**
+	 * NOTE: untuk membuat subtask
+	 */
+	public function createSubtask(array $editTask, array $formData)
+	{
+		$id = $this->taskRepository->createSubtask( $editTask,$formData);
+		return $id;
+	}
+
+	/**
+	 * NOTE: untuk menghapus subtask
+	 */
+	public function deleteSubtask(array $existTask, string $subtaskId)
+	{
+		$id = $this->taskRepository->deleteSubtask( $existTask,$subtaskId);
+		return $id;
+	}
 }

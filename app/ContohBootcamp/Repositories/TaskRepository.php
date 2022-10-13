@@ -54,4 +54,54 @@ class TaskRepository
 		$id = $this->tasks->save($editedData);
 		return $id;
 	}
+	
+	/**
+	 * Untuk menghapus task 
+	 *  */
+	public function delete(string $id)
+	{
+		$id = $this->tasks->deleteQuery(['_id'=>$id]);
+		return $id;
+	}
+
+	/**
+	 * Untuk membuat subtask
+	 */
+	public function createSubtask(array $task, array $subtask)
+	{
+		$subtasks = isset($task['subtasks']) ? $task['subtasks'] : [];
+		$subtasks[] = [
+				'_id'=> (string) new \MongoDB\BSON\ObjectId(),
+				'title'=>$subtask['title'],
+				'description'=>$subtask['description']
+			];
+
+		$task['subtasks'] = $subtasks;
+
+		$id = $this->tasks->save($task);
+		return $id;
+	}
+	
+	/**
+	 * Untuk menghapus subtask 
+	 *  */
+	public function deleteSubtask(array $existTask, string $subtaskId)
+	{
+		$subtasks = isset($existTask['subtasks']) ? $existTask['subtasks'] : [];
+
+		// Pencarian dan penghapusan subtask
+		$subtasks = array_filter($subtasks, function($subtask) use($subtaskId) {
+			if($subtask['_id'] == $subtaskId)
+			{
+				return false;
+			} else {
+				return true;
+			}
+		});
+		$subtasks = array_values($subtasks);
+		$existTask['subtasks'] = $subtasks;
+
+		$id = $this->tasks->save( $existTask);
+		return $id;
+	}
 }

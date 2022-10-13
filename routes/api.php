@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controller\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('task')->group(function() {
+    Route::get('/show_tasks', [TaskController::class, 'showTasks']);
+    Route::post('/create_task', [TaskController::class, 'createTask']);
+    Route::put('/update_task', [TaskController::class, 'updateTask']);
+
+    // NOTE: lanjutkan tugas assignment di routing baru dibawah ini
+    Route::delete('/delete_task/{taskId}', [TaskController::class, 'deleteTask']);
+    Route::post('/assign_task', [TaskController::class, 'assignTask']);
+    Route::delete('/unassign_task/{taskId}', [TaskController::class, 'unassignTask']);
+    Route::post('/create_subtask', [TaskController::class, 'createSubtask']);
+    Route::delete('/delete_subtask/{taskId}/{subtaskId}', [TaskController::class, 'deleteSubtask']);
 });
